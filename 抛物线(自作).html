@@ -1,0 +1,106 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <title>购物车</title>  
+    <style>  
+    	*{
+    		margin:0;
+    		padding:0;
+    	}
+        #addToCart {  
+            position: fixed;  
+            left: 600px;  
+            cursor: pointer;  
+            width: 100px;  
+            height: 40px;  
+            line-height: 40px;  
+            border: 1px solid deeppink;  
+            text-align: center;  
+            color: deeppink;  
+            top:500px;
+        }  
+        #addToCart:hover {  
+            color: #fff;  
+            background-color: deeppink;  
+        }  
+  
+        #shopCart {  
+            position: fixed;  
+            right: 0;  
+            top: 200px;  
+            color: red;  
+        }  
+        #shopNum{
+        	width: 60px;
+        	height: 25px;
+        	background: deeppink;
+        	color:black;
+        	text-align: center;
+        	line-he0ight: 25px;
+        }
+    </style>
+	<body>
+		<div id="addToCart">  
+		   添加到购物车  
+		</div>  	
+		<div id="shopCart">  
+		    购物车  
+		  <p id="shopNum"></p>
+		</div>
+	</body>
+</html>  
+<script type="text/javascript">
+	function $(id){
+		return document.getElementById(id);
+	}
+	$("addToCart").onclick = function(){
+		//起点坐标
+		var startPoint = {
+			"x":$("addToCart").offsetLeft + $("addToCart").offsetWidth/2,
+			"y":$("addToCart").offsetTop
+		}
+		var endPoint = {
+			"x":$("shopCart").offsetLeft + 10,
+			"y":$("shopCart").offsetTop
+		}
+		var topPoint = {
+			"x":$("shopCart").offsetLeft - 100,
+			"y":$("shopCart").offsetTop - 50
+		}
+		
+		//根据三点坐标确定抛物线的系数
+		var a = ((startPoint.y - endPoint.y) * (startPoint.x - topPoint.x) - (startPoint.y - topPoint.y) * (startPoint.x - endPoint.x)) / ((startPoint.x * startPoint.x - endPoint.x * endPoint.x) * (startPoint.x - topPoint.x)-(startPoint.x * startPoint.x - topPoint.x * topPoint.x) * (startPoint.x - endPoint.x));  
+				
+		var b = ((endPoint.y - startPoint.y) - a * (endPoint.x * endPoint.x - startPoint.x * startPoint.x)) / (endPoint.x - startPoint.x);  
+				
+		var c = startPoint.y - a * startPoint.x * startPoint.x - b * startPoint.x;
+		console.log(a,b,c)
+		
+		//创建商品
+		var x = startPoint.x
+		var y = startPoint.y
+		var good = document.createElement("div")
+		good.style.width = "50px";
+		good.style.height = "50px";
+		good.style.background = "url(1.bmp) no-repeat center";
+		good.style.backgroundSize = "contain"
+		good.style.position = "absolute";
+		good.style.left = x + "px";
+		good.style.top = y + "px";
+		document.body.appendChild(good)
+		//获取商品起始点坐标
+		var timer = setInterval(function(){
+			x += 10;
+			y = a*x*x + b*x + c;
+			good.style.left = x + "px";
+			good.style.top = y + "px";
+			if ( x > endPoint.x ){
+				x=endPoint.x;
+				clearInterval(timer)
+				good.style.display = "none";
+			}
+		},30)
+	}
+</script>
+

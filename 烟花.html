@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	html,body{
+		height: 100%;
+	}
+	body{
+		background: black;
+	}
+	div{
+		position: absolute;
+		border-radius: 50%;
+		box-shadow: 1px 1px 5px #fff;
+	}
+	.fire{
+		width: 10px;
+		height: 10px;
+	}
+	.boom{
+		width: 5px;
+		height: 5px;
+	}
+	</style>
+</head>
+<body>
+	
+
+</body>
+</html>
+<script>
+	//鼠标点击事件触发,
+	//1.烟花从点击处下方一定距离升起,速度,位置(待确认),
+	//边界处理当烟花到达点击的坐标, 完成多个div创建,并做随机速度的抛物线运动
+	//当下落到一定的高度,烟花自动消失
+
+	function Fireworks(disx,disy){//定义烟花
+		this.distance = 300;
+		this.disx = disx;
+		this.disy = disy;
+		this.init = function(){//烟花初始化
+			this.div = document.createElement("div");
+			this.div.className = "fire";
+			this.div.style.backgroundColor = ` rgb( ${ rand(0,255) },${ rand(0,255) },${ rand(0,255) } ) `;
+			document.body.appendChild(this.div);
+			this.div.style.left = this.disx + "px";
+			this.div.style.top = this.disy + parseInt(this.distance) + "px";
+			this.move();
+		}
+		this.move = function(){//烟花移动
+			var that = this;
+			that.timer = setInterval(function(){
+				that.div.style.top = that.div.offsetTop - 10 + "px";
+				if ( that.div.offsetTop == that.disy ){//烟花爆炸
+					that.div.remove();
+					clearInterval(that.timer);
+					for ( var i = 0 ; i < 100 ; i++ ){
+						var b = new Boom(that.disx,that.disy);
+						b.init();
+					}
+				}
+			},30)
+		}
+	}
+	function rand(min,max){
+		return Math.floor( Math.random()*(max-min+1) + min );
+	}
+	
+
+	
+	
+	function Boom(disx,disy){//定义爆炸碎片
+		this.fx = rand( -10,10 );
+		this.fy = rand( -20,-5 );
+		this.init = function(){//火花初始化
+			this.div = document.createElement("div");
+			this.div.className = "fire";
+			this.div.style.backgroundColor = ` rgb( ${ rand(0,255) },${ rand(0,255) },${ rand(0,255) } ) `;
+			document.body.appendChild(this.div);
+			this.div.style.left = disx + "px";
+			this.div.style.top = disy + "px";
+			this.move();
+		}
+		this.move = function(){//火花移动
+			var that = this;
+			this.timer2 = setInterval(function(){
+				that.fy += 2;
+				that.div.style.left = that.div.offsetLeft + that.fx + "px";
+				that.div.style.top = that.div.offsetTop + that.fy + "px";
+				if ( that.div.offsetTop - that.div.offsetHeight >= window.innerHeight-100  ){
+					clearInterval(that.timer2);
+					that.div.remove();
+				}
+			},100)
+		}
+	}
+	
+	
+
+	document.onclick = function(e){
+		var e = e || event;
+		var f = new Fireworks( e.pageX , e.pageY );
+		f.init();
+		// console.log(f.disx)
+	}
+</script>	

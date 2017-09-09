@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<style>
+	*{
+		margin:0;
+		padding: 0;
+	}
+		#box{
+			width:30px;
+			height: 30px;
+			background: orangered;
+			position: absolute;
+			left: 500px;
+			top :100px;
+			border-radius: 50%;
+		}
+	</style>
+	<body>
+		<div id="box"></div>
+		<div id="yuan"></div>
+	</body>
+</html>
+<script>
+	var ball = document.getElementById("box");
+	var yuan = document.getElementById("yuan");
+	var r = 200;
+	var deg = 0;
+	var centerPoint = {
+		x : ball.offsetLeft - ball.offsetWidth/2,
+		y : ball.offsetTop - ball.offsetHeight/2 + r 
+	}
+	yuan.style.cssText = `width:${2*r}px;height:${2*r}px;position:absolute;border:1px solid red;border-radius:50%;left:${centerPoint.x-r}px;top:${centerPoint.y-r}px`
+	var timer = setInterval(function(){
+		ball.style.left = centerPoint.x + r * Math.cos( deg*Math.PI/180 ) - 15 + "px";
+		ball.style.top = centerPoint.y + r * Math.sin( deg*Math.PI/180 )  - 15 +"px" ;
+		deg+=5;
+	},30)
+</script>

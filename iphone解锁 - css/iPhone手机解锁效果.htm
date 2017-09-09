@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+	<meta charset="utf-8"/>
+	<title>iPhone手机解锁效果</title>
+	<style type="text/css">
+	#iphone{position:relative;width:426px;height:640px;margin:10px auto;background:url(iphone.jpg) no-repeat;}
+	#lock{position:absolute;left:50%;bottom:33px;width:358px;height:62px;margin-left:-179px;}
+	#lock span{position:absolute;width:93px;height:62px;cursor:pointer;background:url(unlock_btn.jpg) no-repeat;}
+	</style>
+	 
+	</head>
+	<body>
+		<div id="iphone">
+			<div id="lock"><span></span></div>
+		</div>
+	</body>
+</html>
+<script src="sport5.js"></script>
+<script type="text/javascript">
+	var slider = document.getElementsByTagName("span")[0];
+	function $(id){
+		return document.getElementById(id)
+	}
+
+	// 滑动边界处理
+	var disx = 0;
+	var x = 0;
+	slider.onmousedown = function(e){
+		var e = e || event;
+		disx = e.offsetX || e.layerX;
+		document.onmousemove = function(e){
+			var e = e || event;
+			x = e.pageX - $("iphone").offsetLeft - $("lock").offsetLeft - disx;
+			x = x < 0 ? 0 : x > $("lock").offsetWidth - slider.offsetWidth ? $("lock").offsetWidth - slider.offsetWidth : x ;
+			console.log(x)
+			slider.style.left = x + "px";
+		}
+	}
+	document.onmouseup = function(){
+		document.onmousemove = null;
+		if (x > ( $("lock").offsetWidth - slider.offsetWidth )/2){
+			startMove( slider,{ "left":  $("lock").offsetWidth - slider.offsetWidth} )
+		}else{
+			startMove( slider,{ "left": 0} )
+		}
+	}
+</script>

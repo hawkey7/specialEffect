@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        ul{list-style: none}
+        *{margin:0; padding:0;}
+        div{
+            width: 1150px;
+            height: 400px;
+            margin:50px auto;
+            border:1px solid red;
+            overflow: hidden;
+        }
+        div li {
+            width: 240px;
+            height: 400px;
+            float: left;
+        }
+        div ul {
+            width: 1300px;
+        }
+
+    </style>
+</head>
+<body>
+	<div>
+	    <ul>
+            <li><img src="images/1.jpg" alt=""></li>
+            <li><img src="images/2.jpg" alt=""></li>
+            <li><img src="images/3.jpg" alt=""></li>
+            <li><img src="images/4.jpg" alt=""></li>
+	        <li><img src="images/5.jpg" alt=""></li>
+	    </ul>
+	</div>
+</body>
+</html>
+<script src="sport4.js"></script>
+<script type="text/javascript">
+    var oList = document.getElementsByTagName("li")
+    for ( var i = 0 ; i < oList.length ; i++ ){
+        oList[i].onmouseover = function(){
+            thin( 50 )
+            startMove( this , { width : 950 } )
+        }
+        oList[i].onmouseout = function(){
+            thin( 240 )
+        }
+    }
+
+    function thin( value ){
+        for ( var j = 0 ; j < oList.length ; j++ ){
+            startMove( oList[j] , { width : value }  )
+        }
+    }
+
+</script>
+

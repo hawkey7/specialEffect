@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+	*{margin: 0;padding: 0}
+	.box {width: 600px;height: 300px;background: pink;box-shadow: 5px 5px 10px #333;margin: 0 auto;margin-top: 100px;text-align: center;}
+	p {text-align: center;font-size: 45px;}
+	#content {width: 380px;height: 120px;background: #fff;margin: 0 auto;margin-top:30px;margin-bottom: 10px;text-align: center;font-size: 45px;line-height: 120px;}
+	input {width: 90px;height: 25px;margin: 0 20px;}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<p>计时器</p>
+		<div id="content"></div>
+		<input type="button" value="开始计时" id="btn1">
+		<input type="button" value="结束计时" id="btn2">
+		<input type="button" value="复位" id="btn3">
+	</div>
+</body>
+</html>
+<script>	
+	//定义dom查询函数
+	function $(id){
+		return document.getElementById(id);
+	}
+	//设置加0函数,让秒表更好看
+	function add(m){
+		return m<10 ? "0"+ m : m;
+	}
+	//设置秒表初始状态
+	var t = 0;
+	var h = add(parseInt( t/360000 ));
+	var min = add(parseInt( (t-360000*h)/6000 ))
+	var s = add(parseInt( (t/100)%60 ))
+	var ms = add(parseInt( t%100 ))
+	$("content").innerHTML = h +":"+ min +":"+ s +":"+ ms
+	//设置setInterval函数,让秒表计时
+	var flag = true;
+	function gotime(){
+		if (flag){
+			timer = setInterval(function(){
+					t++;
+					var h = add(parseInt( t/360000 ));
+					var min = add(parseInt( (t-360000*h)/6000 ))
+					var s = add(parseInt( (t/100)%60 ))
+					var ms = add(parseInt( t%100 ))
+					$("content").innerHTML = h +":"+ min +":"+ s +":"+ ms
+				
+			},10)
+		}
+		flag = false;
+	}
+	// 开始按钮点击时开始计时
+	$("btn1").onclick = function(){
+		gotime();
+	}
+		
+	// 结束及时按钮时暂停
+	$("btn2").onclick = function(){
+		clearInterval(timer);
+		flag = true;
+	}
+	// 复位效果
+	$("btn3").onclick = function(){
+		if( flag ){
+			t = 0;
+			$("content").innerHTML = "0"+0 +":"+ 0+"0" +":"+ 0+"0" +":"+ 0+"0"
+			clearInterval(timer);
+		}
+	}
+</script>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>旋转木马轮播图</title>
+    <link rel="stylesheet" href="css/css.css"/>
+</head>
+<body>
+<div class="wrap" id="wrap">
+   <div class="slide" id="slide">
+       <ul>
+           <li><a href="#"><img src="images/slidepic1.jpg" alt=""/></a></li>
+           <li><a href="#"><img src="images/slidepic2.jpg" alt=""/></a></li>
+           <li><a href="#"><img src="images/slidepic3.jpg" alt=""/></a></li>
+           <li><a href="#"><img src="images/slidepic4.jpg" alt=""/></a></li>
+           <li><a href="#"><img src="images/slidepic5.jpg" alt=""/></a></li>
+       </ul>
+       <div class="arrow" id="arrow">
+           <a href="javascript:;" class="prev" id="prev"></a>
+           <a href="javascript:void(0);" class="next" id="next"></a>
+       </div>
+   </div>
+</div>
+</body>
+</html>
+<script src="sport5.js"></script>
+<script>
+   var _json = [
+        {   //  1
+            "width":400,
+            "top":20,
+            "left":50,
+            "opacity":20,
+            "zIndex":2
+        },
+        {  // 2
+            "width":600,
+            "top":70,
+            "left":0,
+            "opacity":80,
+            "zIndex":3
+        },
+        {   // 3
+            "width":800,
+            "top":100,
+            "left":200,
+            "opacity":100,
+            "zIndex":4
+        },
+        {  // 4
+            "width":600,
+            "top":70,
+            "left":600,
+            "opacity":80,
+            "zIndex":3
+        },
+        {   //5
+            "width":400,
+            "top":20,
+            "left":750,
+            "opacity":20,
+            "zIndex":2
+        }
+	];
+	function $(id){
+		return document.getElementById(id);
+	}
+	//页面加载   根据json数据摆放图片的位置
+	var list = document.getElementsByTagName("li");
+  var flag = true;
+	function loadInfo(){
+		for( var i = 0 ; i < list.length ; i++ ){
+			startMove( list[i] , _json[i] ,function(){
+        flag = true;
+      } )
+		}
+	}
+	loadInfo();
+	$("slide").onmouseover = function(){
+		startMove( $("arrow") ,{"opacity":100} )
+	}
+	$("slide").onmouseout = function(){
+		startMove( $("arrow") ,{"opacity":0} )
+	}
+	
+	//点击右侧按钮 ：删除json数组中的第一个数据 放到最后
+	$("next").onclick = function(){
+    if ( flag ){
+      _json.push( _json.shift() ) ;
+      loadInfo();
+      flag = false;
+    }
+	}
+  $("prev").onclick = function(){
+    if ( flag ){
+      _json.unshift( _json.pop() )  ;
+      loadInfo();
+      flag = false;
+    }
+  }
+</script>

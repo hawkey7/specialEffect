@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+	*{
+		margin: 0 ;
+		padding: 0;
+	}
+	html , body {
+		width: 100%;
+		height: 100%;
+	}
+	body{
+		background: black;
+	}
+	img {
+		position: absolute;
+	}
+
+	</style>
+</head>
+<body>
+</body>
+</html>
+<script>
+	function Snow(){//下雪,随机X,Y速度,随机大小,随机出现位置
+		this.fx = this.rand(-5,-2);
+		this.fy = this.rand(2,5);
+		this.width = this.height = this.rand(10,30);
+		this.initLeft = this.rand(200,1380);
+		this.initTop = -this.height;
+	}
+	Snow.prototype.rand = function(min,max){
+		return Math.floor( Math.random()*(max-min+1) + min );
+	}
+	Snow.prototype.init = function(){
+		var that = this;
+		this.img = document.createElement("img");
+		this.img.src = "snow.png";
+		this.img.style.height = this.img.style.width = this.width + "px";
+		that.img.style.left = that.initLeft + "px";
+		that.img.style.top = that.initTop + "px";
+		document.body.appendChild(this.img);
+		that.timer = setInterval(function(){
+			that.img.style.left = that.img.offsetLeft + parseInt(that.fx) + "px";
+			that.img.style.top = that.img.offsetTop + parseInt(that.fy) + "px";
+			if ( that.img.offsetLeft <= 0 || that.img.offsetTop >= window.innerHeight - that.width ){
+				that.img.remove();
+				clearInterval(that.timer);
+			}
+		},30)
+	}
+
+	window.onload = function(){
+		var timer = setInterval(function(){
+			var s = new Snow();
+			s.init();
+			console.log(s)
+		},100);
+	}
+
+</script>

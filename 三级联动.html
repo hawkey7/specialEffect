@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+	select{
+		width: 80px;
+	}
+	</style>
+	<script src="jquery-1.11.1.min.js"></script>
+</head>
+<body>
+	省: <select name="" id="pro"> <option value="" style="display:none">请选择</option> </select>	
+	市: <select name="" id="city"><option value="" style="display:none">请选择</option></select>	
+	县: <select name="" id="country"><option value="" style="display:none">请选择</option></select>	
+</body>
+</html>
+<script>
+	var provArr = ["辽宁","山西","河北"];
+		//              0      1     2
+	var cityArr = [["沈阳","大连","铁岭"],["大同","太原"],["邯郸","石家庄","唐山","雄安"]];
+	//                 0    1     2       0     1       0     1      2     3     
+	var countryArr = [[["s1","s2"],["d1"],["昌图","莲花乡"]],[["t1","t2"],["y1"]],[["h1"],["s1","s2"],["tangshan1"],["xiongan1"]]];
+
+
+	window.onload = function(){
+		for ( i in provArr ){
+			var $pro = $("<option>")
+			$pro.html( provArr[i] );
+			$("#pro").append($pro); 
+		}
+	}
+
+	$("#pro").change(function(){
+		$("#city")[0].length = 1;
+		// $("#city").append("<option>请选择</option>")
+		// console.log(i)
+		for ( i in provArr ){
+			if ( $("#pro").val() == provArr[i] ){
+				index = i ;
+			}
+		}
+		for ( j in cityArr[index] ){
+			var $city = $("<option>")
+			$city.html( cityArr[index][j] );
+			$("#city").append($city); 
+		}
+	})
+
+	$("#city").change(function(){
+		$("#country")[0].length = 1;
+		$("#country").append("<option value='1'>请选择</option>"); 
+		console.log(index)
+		for ( i in cityArr ){
+			if ( $("#city").val() == cityArr[index][i] ){
+				index2 = i ;
+			}
+		}
+		for ( j in countryArr[index][index2] ){
+			var $country = $("<option>")
+			$country.html( countryArr[index][index2][j] );
+			$("#country").append($country); 
+		}
+	})
+	
+
+</script>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+<style type="text/css">
+	*{
+		margin:0;
+		padding: 0;
+	}
+	#stage{
+		width: 1000px;
+		height: 500px;
+		border:1px solid #B65507;
+		margin: 0 auto;
+		margin-top: 50px;
+		padding-top: 20px;
+		padding-left: 65px;
+	}
+	#box{
+		border:1px solid #E97373;
+		width: 700px;
+		height: 398px;
+		margin-right: 20px;
+		box-shadow: 1px 1px 5px #000;
+		float: left;
+		margin-bottom: 20px;
+		position: relative;
+	}
+	.list{
+		width: 200px;
+		height: 400px;
+		float: left;
+		background: #333;
+		font-size: 20px;
+		color: #1ADF08;
+		margin-bottom: 20px;
+	}
+	.list div{
+		height: 80px;
+		border-bottom: 1px dashed #1ADF08;
+	}
+	.list div p {
+		line-height: 40px;
+		padding-left: 5px;
+	}
+	#head{
+		font-size: 30px;
+		font-weight: bold;
+		height: 50px;
+		line-height: 50px;
+	}
+	#start{
+		display: block;
+		color: #fff;
+		width: 100px;
+		height: 30px;
+		background: #666;
+		line-height: 30px;
+		text-align:center;
+		margin-left: 300px;
+	}
+	#ball{
+		width: 20px;
+		height: 20px;
+		background: #f00;
+		position: absolute;
+		border-radius: 50%;
+		bottom:15px;
+		left: 340px;
+		z-index: 999;
+	}
+	#ban{
+		width: 160px;
+		height: 15px;
+		background: #F3E342;
+		border-radius: 15px;
+		position: absolute;
+		bottom: 0;
+		left: 270px;
+	}
+	#content{
+		position: absolute;
+		top: 160px;
+		left: 270px;
+		font-size: 34px;
+		text-align: center;
+		display: none;
+	}
+</style>
+</head>
+<body>
+	<div id="stage">
+		<div id="box">
+			<div id="ball"></div>
+			<div id="ban"></div>
+			<div id="content">Game Over!</div>
+		</div>
+		<div class="list">
+			<div id="head">游戏重要信息</div>
+			<div>
+				<p>当前时间</p>
+				<p id="time"></p>
+			</div>
+			<div>
+				<p>游戏状态</p>
+				<p id="state">游戏加载完成</p>
+			</div>
+			<div>
+				<p>当班打板次数</p>
+				<p id="count">加载中...</p>
+			</div>
+			<div>
+				<p>游戏得分</p>
+				<p id="score">加载中...</p>
+			</div>
+		</div>
+		<input type="button" id="start" value="开始游戏">	
+	</div>
+</body>
+</html>
+<script>
+	function $(id){
+		return document.getElementById(id);
+	}
+	//获取任意区间值
+	function rand(min,max){
+		return  Math.floor( Math.random()*(max-min+1) ) + min;
+	}
+	
+	//获取随机颜色值
+	function getColor(){
+	      var R = rand(0,255).toString(16);
+	      var G = rand(0,255).toString(16);
+	      var B = rand(0,255).toString(16);
+	      return (R.length<2?"0"+R:R) + (G.length<2?"0"+G:G) + (B.length<2?"0"+B:B);
+	}
+	window.onload = function(){
+		for(var i =0; i < 100; i ++ ){
+			var oDiv = document.createElement("div");
+			oDiv.style.backgroundColor = "#"+ getColor();
+			oDiv.style.width = 68+"px";
+			oDiv.style.height = 15+"px";
+			oDiv.style.border = "1px solid #fff";
+			oDiv.style.position = "absolute";
+			oDiv.style.top = parseInt(i/10)*17 +"px";
+			oDiv.style.left = (i%10)*70 + "px" 
+			oDiv.className = "target";
+			$("box").appendChild( oDiv );
+		}
+	}
+	//时钟
+	function  dateToString(d,sign){
+		sign = sign || "/";   	
+	    var year = d.getFullYear();
+	    var month = d.getMonth() + 1;
+	    var _date = d.getDate();
+	    var hour = getTime( d.getHours() );
+	    var minute =getTime( d.getMinutes() ) ;
+	    var second =getTime( d.getSeconds() ) ;
+	    return year + sign + month + sign + _date  +  "  " + hour + ":" + minute + ":" + second;
+	}
+	function getTime(time){
+		return time < 10 ? "0" + time  : time;
+	}
+	showTime(); //页面加载时   显示当前系统时间   
+	function showTime(){ 
+		var now = new Date();
+		$("time").innerHTML = dateToString(now);
+	}
+	
+	setInterval(showTime,1000);
+
+	//点击游戏开始
+	oTarget = document.getElementsByClassName("target");
+	var count = 0;
+	var score = 0;
+	$("start").onclick = function(){
+		var speedX = 8;
+		var speedY = -10;
+		var timer = null;
+		clearInterval( timer );
+		timer = setInterval(function(){
+			$("ball").style.left = $("ball").offsetLeft + speedX + "px" ;
+			$("ball").style.top = $("ball").offsetTop + speedY + "px";
+			if( $("ball").offsetLeft <= 0  ){
+				$("ball").style.left = 0;
+				speedX *= -1;
+			}else if( $("ball").offsetLeft > ($("box").offsetWidth - $("ball").offsetWidth) ){
+				$("ball").style.left = $("box").offsetWidth - $("ball").offsetWidth + "px";
+				speedX *= -1;
+			}
+
+
+
+			if( $("ball").offsetTop >= 378   ){//判断是否被挡板挡住
+				if ( $("ball").offsetLeft >=  $("ban").offsetLeft &&  $("ball").offsetLeft <=  $("ban").offsetLeft + $("ban").offsetWidth ){
+					$("ball").style.top = 358 + "px";
+					speedY *= -1;
+				}else{
+					$("content").style.display = "block";
+					clearInterval(timer);
+				}
+			}
+			//判断消除的方块
+			for ( var i = 0 ; i < oTarget.length ; i ++ ){
+				if (  $("ball").offsetTop < oTarget[i].offsetTop + 17 && $("ball").offsetTop > oTarget[i].offsetTop &&  $("ball").offsetLeft + 10 > oTarget[i].offsetLeft && $("ball").offsetLeft + 10 < oTarget[i].offsetLeft + oTarget[i].offsetWidth){		
+					$("ball").style.top = oTarget[i].offsetTop + 17 + "px";
+					oTarget[i].style.display = "none";
+					speedY*=-1;
+					count++;
+					score++;
+					$("count").innerHTML = `撞击小球${count}次`;
+					$("score").innerHTML = `游戏得分:${score}分`;
+				}
+			}
+		},30)
+	}
+	//滑板拖拽函数
+	$("ban").onmousedown = function(e){
+		var e = e || event;
+		var disx = e.offsetX || e.layerX ; 
+		document.onmousemove = function(e){
+			var e = e || event;
+			x = e.pageX - disx -$("box").offsetLeft;
+			x = x < 0 ? 0 : x > $("box").offsetWidth - $("ban").offsetWidth ? $("box").offsetWidth - $("ban").offsetWidth : x;
+			$("ban").style.left = x + "px";
+		}
+	}
+	document.onmouseup = function(){
+		document.onmousemove = null;
+	}
+	//小球运动
+	
+
+
+</script>
